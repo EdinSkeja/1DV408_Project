@@ -2,31 +2,35 @@
 namespace Controller;
 
 class LoginController {
-
-	public function doControll($lhandler) {
+	public function DoControll($lhandler) {
 		$xhtml = '';
 		$failmess = '';
 		$lview = new \View\LoginView();
 
 		if ($lhandler -> CheckLoggedIn()) {
-			//Add Logout
+			$xhtml = $lview -> GetLoggedIn();
 		} else {
-			//Check Cookies
-			if ($lview -> CheckCookies()) {
-				$lhandler -> Login($_COOKIE[$lview -> username], $_COOKIE[$lview -> password]);
+			if ($lview -> CheckCookies()) {	
+				$lhandler -> Login($lview -> decrypt($_COOKIE[$lview -> username]), $lview -> decrypt($_COOKIE[$lview -> password]));
 			}
 
 			if ($lview -> Submit()) {
-				//Add username and password validator..
-				if ($lhandler -> Login($lview -> Username(), $lview -> Password())) {
+				$failmess = $lhandler -> Login($lview -> Username(), $lview -> Password());
+				if ($failmess == \Model\LoginHandler::FIELDS_EMPTY) {
+					$failmess = $lview -> FieldsAreEmpty();
+				} elseif ($failmess == \Model\LoginHandler::USERNAME_FORMAT_FAIL) {
+					$failmess = $lview -> UsernameFormatFail();
+				} elseif ($failmess == \Model\LoginHandler::PASSWORD_FORMAT_FAIL) {
+					$failmess = $lview -> PasswordFormatFail();
+				} elseif ($failmess == \Model\LoginHandler::PASSWORD_MATCH_FAIL) {
+					$failmess = $lview -> PasswordMatchFail();
+				} elseif ($failmess == \Model\LoginHandler::LOGGED_IN) {
 					if ($lview -> Remember()) {
-						$lview -> CreateCookies($lview -> Username(), $lview -> Password());
+						$lview -> CreateCookies($lview -> encrypt($lview -> Username()), $lview -> encrypt($lview -> Password()));
 					}
-				} else {
-					$failmess .=  $lview -> WrongCredentials();
 				}
 			}
-			$xhtml .= $lview -> GetLogin($failmess);
+			$xhtml = $lview -> GetLogin($failmess);
 		}		
 		return $xhtml;
 	}	

@@ -2,6 +2,13 @@
 namespace Common;
 
 class Page {
+
+	/**
+	 * Returns full html page
+	 * 
+	 * @param string $content
+	 * @return $xhtml
+	 */
 	public function GetHTMLPage($content) {
 		$xhtml = "
 		<!DOCTYPE html>
@@ -276,11 +283,10 @@ class Page {
 				    </div>
 				    <!-- /.navbar-static-side -->
 				</nav>
-				<div id='page-wrapper' style='min-height: 368px;'>
-				    <div class='row'>
-				        This site is in beta!.<br>		                
-				    </div>		 
-				    $content           
+				<div id='page-wrapper' style='min-height: 368px;'>	
+				    <div class='row'> 
+				    	$content     
+				    </div>	      
 				</div>
 				</div>	
 				<!-- jQuery Version 1.11.0 -->

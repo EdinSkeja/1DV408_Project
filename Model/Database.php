@@ -5,6 +5,11 @@ class Database {
 	private $m_databaseName = "";
 	private $m_mysqli = null;
 
+	/**
+	 * Ansluter till databasen
+	 * 
+	 * @param DBConfig
+	 */
 	public function Connect(DBConfig $config) {
 		$message = "";
 
@@ -18,6 +23,12 @@ class Database {
 		}
 	}
 
+	/**
+	 * Kör igenom en sql fråga
+	 * 
+	 * @param string $sqlQuery
+	 * @return $stmt
+	 */
 	public function SqlStatement($sqlQuery) {
 		$stmt = $this -> m_mysqli -> prepare($sqlQuery);
 
@@ -27,6 +38,11 @@ class Database {
 		return $stmt;
 	}
 
+	/**
+	 * Stänger databasen
+	 * 
+	 * @return $stmt
+	 */
 	public function Close() {
 		$stmt = $this -> m_mysqli -> close();
 
